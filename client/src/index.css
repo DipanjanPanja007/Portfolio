@@ -12,6 +12,15 @@ body {
   background: #020617;
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .animated-bg {
   background:
     radial-gradient(circle at 20% 20%, rgba(30, 41, 59, 0.6), transparent 45%),
