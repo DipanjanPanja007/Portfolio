@@ -1,16 +1,60 @@
+import { useEffect, useRef, useState } from 'react'
+import Container from './components/layout/Container'
+import Navbar from './components/layout/navbar'
+
+const sectionIds = ['profile', 'education', 'projects', 'skills', 'about', 'contact']
+
 function App() {
+  const containerRef = useRef(null)
+  const [activeSection, setActiveSection] = useState('profile')
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean)
+
+    if (sections.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSections = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+
+        if (visibleSections.length > 0) {
+          setActiveSection(visibleSections[0].target.id)
+        }
+      },
+      {
+        root: container,
+        threshold: [0.3, 0.5, 0.7],
+      },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+
+    return () => observer.disconnect()
+  }, [])
+
+  const handleNavigate = (event, id) => {
+    event.preventDefault()
+
+    const section = document.getElementById(id)
+    if (!section) return
+
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setActiveSection(id)
+  }
+
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
-      <div className="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center px-6 text-center">
-        <p className="mb-3 rounded-full border border-slate-700 px-3 py-1 text-xs uppercase tracking-wider text-slate-300">
-          React + Tailwind Ready
-        </p>
-        <h1 className="mb-3 text-4xl font-bold">Frontend setup complete</h1>
-        <p className="text-slate-300">
-          Start building your portfolio UI in the <code>client</code> folder.
-        </p>
-      </div>
-    </main>
+    <div className="relative flex h-screen flex-col overflow-hidden bg-slate-950 text-white">
+      <div className="animated-bg pointer-events-none absolute inset-0 -z-10" />
+      <Navbar activeSection={activeSection} onNavigate={handleNavigate} />
+      <Container ref={containerRef} />
+    </div>
   )
 }
 

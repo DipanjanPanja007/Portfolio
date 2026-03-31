@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: #fff;
+  background: #020617;
+}
+
+.animated-bg {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(30, 41, 59, 0.6), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(15, 23, 42, 0.8), transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(30, 58, 138, 0.22), transparent 40%),
+    #020617;
+  background-size: 140% 140%;
+  animation: bgShift 14s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1%, 2%, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(2%, -1%, 0) scale(1);
+  }
+}
