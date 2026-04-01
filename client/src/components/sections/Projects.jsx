@@ -128,7 +128,7 @@ function Projects() {
   }, [activeImage])
 
   return (
-    <section id="projects" className="scroll-mt-20 py-8 sm:py-10">
+    <section id="projects" className="scroll-mt-20 py-7 sm:py-8">
       <div className="rounded-2xl border border-slate-700/60 bg-slate-900/35 p-5 sm:p-6">
         <h2 className="text-2xl font-bold text-white">Projects</h2>
         

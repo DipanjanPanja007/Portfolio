@@ -23,7 +23,7 @@ function About() {
   return (
     <section
       id="about"
-      className="scroll-mt-20 py-10 md:min-h-[min(100vh,48rem)] md:py-12"
+      className="scroll-mt-20 py-7 sm:py-8"
     >
       <div className="rounded-2xl border border-slate-700/50 bg-slate-900/30 p-6 shadow-[0_0_40px_rgba(15,23,42,0.5)] sm:p-8">
         <blockquote className="border-l-4 border-blue-400/60 pl-4 text-left">
