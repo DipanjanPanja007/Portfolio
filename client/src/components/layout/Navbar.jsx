@@ -12,12 +12,12 @@ const navItems = [
     ),
   },
   {
-    id: 'education',
-    label: 'Education',
+    id: 'about',
+    label: 'About',
     icon: (
       <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
         <path
-          d="m12 3 10 5-10 5L2 8l10-5Zm-6 8.2V14c0 2.2 2.7 4 6 4s6-1.8 6-4v-2.8l-6 3-6-3Z"
+          d="M11 10h2v8h-2v-8Zm1-7a9 9 0 1 0 9 9 9 9 0 0 0-9-9Zm0 4a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 12 7Z"
           fill="currentColor"
         />
       </svg>
@@ -48,12 +48,12 @@ const navItems = [
     ),
   },
   {
-    id: 'about',
-    label: 'About',
+    id: 'education',
+    label: 'Education',
     icon: (
       <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
         <path
-          d="M11 10h2v8h-2v-8Zm1-7a9 9 0 1 0 9 9 9 9 0 0 0-9-9Zm0 4a1.5 1.5 0 1 1-1.5 1.5A1.5 1.5 0 0 1 12 7Z"
+          d="m12 3 10 5-10 5L2 8l10-5Zm-6 8.2V14c0 2.2 2.7 4 6 4s6-1.8 6-4v-2.8l-6 3-6-3Z"
           fill="currentColor"
         />
       </svg>

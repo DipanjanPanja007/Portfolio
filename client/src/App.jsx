@@ -2,7 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import Container from './components/layout/Container'
 import Navbar from './components/layout/navbar'
 
-const sectionIds = ['profile', 'education', 'projects', 'skills', 'about', 'contact']
+const sectionIds = [
+  'profile',
+  'about',
+  'projects',
+  'skills',
+  'education',
+  'contact',
+]
 
 function App() {
   const containerRef = useRef(null)

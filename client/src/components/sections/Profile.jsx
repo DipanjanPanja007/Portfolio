@@ -1,9 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
-
-const lowResImage =
-  'https://res.cloudinary.com/du4bs9xd2/image/upload/v1774975632/profilepic_highcompressed_bhkgsq.jpg'
-const highResImage =
-  'https://res.cloudinary.com/du4bs9xd2/image/upload/v1774975632/profilepic_wepc26.jpg'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 const typedLines = [
   'Full Stack Developer',
@@ -95,8 +90,14 @@ const secondaryLinks = [
   },
 ]
 
+function clamp01(v) {
+  return Math.max(0, Math.min(1, v))
+}
+
 function Profile() {
-  const [imageLoaded, setImageLoaded] = useState(false)
+  const sectionRef = useRef(null)
+  const [focus, setFocus] = useState(0)
+
   const [lineIndex, setLineIndex] = useState(0)
   const [charIndex, setCharIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -104,9 +105,46 @@ function Profile() {
   const activeLine = useMemo(() => typedLines[lineIndex], [lineIndex])
 
   useEffect(() => {
-    const preloadImage = new Image()
-    preloadImage.src = highResImage
-    preloadImage.onload = () => setImageLoaded(true)
+    const section = sectionRef.current
+    if (!section) return
+    const scrollRoot = section.closest('main')
+    if (!scrollRoot) return
+
+    let raf = 0
+
+    const tick = () => {
+      raf = 0
+      const cr = scrollRoot.getBoundingClientRect()
+      const sr = section.getBoundingClientRect()
+      const centerY = cr.top + cr.height / 2
+      const secCenterY = sr.top + sr.height / 2
+      const band = cr.height * 0.42
+      const aligned = clamp01(1 - Math.abs(secCenterY - centerY) / band)
+
+      const overlapTop = Math.max(sr.top, cr.top)
+      const overlapBottom = Math.min(sr.bottom, cr.bottom)
+      const overlap = Math.max(0, overlapBottom - overlapTop)
+      const visibility = sr.height > 0 ? overlap / sr.height : 0
+      const combined = clamp01(aligned * 0.65 + visibility * 0.35)
+
+      setFocus((prev) =>
+        Math.abs(prev - combined) < 0.01 ? prev : combined,
+      )
+    }
+
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(tick)
+    }
+
+    scrollRoot.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    tick()
+
+    return () => {
+      scrollRoot.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
 
   useEffect(() => {
@@ -140,42 +178,67 @@ function Profile() {
 
   const displayText = activeLine.slice(0, charIndex)
 
+  const lift = (1 - focus) * 14
+  const fade = 0.78 + focus * 0.22
+  const linkShift = (1 - focus) * 6
+
   return (
     <section
+      ref={sectionRef}
       id="profile"
-      className="flex min-h-[calc(100vh-8rem)] scroll-mt-20 items-center py-8"
+      className="relative scroll-mt-20 py-8 sm:py-10"
     >
-      <div className="grid w-full grid-cols-1 items-center gap-8 md:grid-cols-2">
-        <div className="mx-auto w-full max-w-xs md:max-w-sm">
-          <div className="relative overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-900/40 shadow-[0_0_30px_rgba(15,23,42,0.8)]">
-            <img
-              src={lowResImage}
-              alt="Profile low quality preview"
-              className={`h-full w-full object-cover blur-sm transition-opacity duration-500 ${
-                imageLoaded ? 'opacity-0' : 'opacity-100'
-              }`}
-            />
-            <img
-              src={highResImage}
-              alt="Profile"
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
-                imageLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
-            />
-          </div>
-        </div>
+      <div
+        className="pointer-events-none absolute left-0 right-0 top-0 h-px overflow-hidden bg-slate-800/80"
+        aria-hidden
+      >
+        <div
+          className="h-full origin-left bg-gradient-to-r from-blue-500/0 via-blue-400/70 to-blue-500/0 will-change-transform"
+          style={{
+            opacity: 0.35 + focus * 0.65,
+            transform: `scaleX(${0.15 + focus * 0.85})`,
+          }}
+        />
+      </div>
 
-        <div className="text-center md:text-left">
-          <h1 className="text-2xl font-bold leading-tight text-white sm:text-3xl">
-            Hello, I am <span className="text-blue-300">Dipanjan</span>
+      <div className="mx-auto w-full max-w-2xl">
+        <div
+          className="text-center will-change-transform md:text-left"
+          style={{
+            opacity: fade,
+            transform: `translate3d(0, ${lift}px, 0)`,
+          }}
+        >
+          <h1 className="text-2xl font-bold leading-tight text-white sm:text-5xl">
+            Hello, I am{' '}
+            <span
+              className="text-blue-300 transition-[text-shadow,opacity] duration-200"
+              style={{
+                textShadow:
+                  focus > 0.2
+                    ? `0 0 ${20 + focus * 12}px rgba(147, 197, 253, ${0.25 + focus * 0.2})`
+                    : undefined,
+                opacity: 0.88 + focus * 0.12,
+              }}
+            >
+              Dipanjan
+            </span>
           </h1>
 
-          <p className="mt-3 h-8 text-lg font-medium text-slate-200">
-            {displayText}
-            <span className="ml-1 inline-block h-5 w-[2px] animate-pulse bg-blue-300 align-middle" />
+          <p className="mt-3 flex h-8 items-center justify-center gap-0 text-lg font-medium text-slate-200 md:justify-start">
+            <span className="inline transition-[opacity] duration-150" style={{ opacity: 0.75 + focus * 0.25 }}>
+              {displayText}
+            </span>
+            <span
+              className="ml-1 inline-block h-5 w-[2px] bg-blue-300 align-middle transition-opacity duration-300"
+              style={{ opacity: 0.4 + focus * 0.6 }}
+            />
           </p>
 
-          <div className="mt-5 flex flex-col items-center gap-3 md:items-start">
+          <div
+            className="mt-5 flex flex-col items-center gap-3 will-change-transform md:items-start"
+            style={{ transform: `translate3d(0, ${linkShift}px, 0)` }}
+          >
             <div className="flex items-center gap-3">
               {primaryLinks.map((link) => (
                 <a
@@ -185,7 +248,8 @@ function Profile() {
                   rel="noreferrer"
                   aria-label={link.label}
                   title={link.label}
-                  className="rounded-lg border border-slate-700 bg-slate-900/40 p-2 text-slate-200 transition hover:border-blue-400 hover:text-blue-300"
+                  className="rounded-lg border border-slate-700/90 bg-slate-900/50 p-2 text-slate-200 backdrop-blur-sm transition-[border-color,background-color,transform] duration-200 hover:border-blue-400/80 hover:bg-slate-800/60 hover:text-blue-300"
+                  style={{ transform: `translate3d(0, ${(1 - focus) * 4}px, 0)` }}
                 >
                   {link.icon}
                 </a>
@@ -201,7 +265,8 @@ function Profile() {
                   rel="noreferrer"
                   aria-label={link.label}
                   title={link.label}
-                  className="rounded-lg border border-slate-700 bg-slate-900/40 p-2 text-slate-200 transition hover:border-blue-400 hover:text-blue-300"
+                  className="rounded-lg border border-slate-700/90 bg-slate-900/50 p-2 text-slate-200 backdrop-blur-sm transition-[border-color,background-color,transform] duration-200 hover:border-blue-400/80 hover:bg-slate-800/60 hover:text-blue-300"
+                  style={{ transform: `translate3d(0, ${(1 - focus) * 4}px, 0)` }}
                 >
                   {link.icon}
                 </a>
@@ -209,11 +274,9 @@ function Profile() {
             </div>
           </div>
 
-          <p className="mt-5 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
-            Dynamic Full Stack Web Developer with a passion for mastering data
-            structures and algorithms, constantly eager to learn new
-            technologies, and taking on challenges to build scalable,
-            future-ready solutions.
+          <p className="mt-6 text-sm leading-7 text-slate-300 sm:text-base">
+            Full Stack Developer focused on scalable backend systems and
+            AI-powered applications.
           </p>
         </div>
       </div>
