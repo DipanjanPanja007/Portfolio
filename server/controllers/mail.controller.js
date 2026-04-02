@@ -7,7 +7,7 @@ const sendMailController = async (req, res) => {
     console.log(email, message, subject);
 
     // ✅ Validation
-    if (!email || !message) {
+    if (!email.trim() || !message.trim()) {
       return res.status(400).json({
         success: false,
         message: "Email and message are required",
