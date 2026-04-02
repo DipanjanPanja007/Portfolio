@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Container from './components/layout/Container'
-import Navbar from './components/layout/navbar'
+import Navbar from './components/layout/Navbar'
 
 const sectionIds = [
   'profile',
