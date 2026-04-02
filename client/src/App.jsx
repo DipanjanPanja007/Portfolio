@@ -15,36 +15,7 @@ function App() {
   const containerRef = useRef(null)
   const [activeSection, setActiveSection] = useState('profile')
 
-  // useEffect(() => {
-  //   const container = containerRef.current
-  //   if (!container) return
-
-  //   const sections = sectionIds
-  //     .map((id) => document.getElementById(id))
-  //     .filter(Boolean)
-
-  //   if (sections.length === 0) return
-
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       const visibleSections = entries
-  //         .filter((entry) => entry.isIntersecting)
-  //         .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-
-  //       if (visibleSections.length > 0) {
-  //         setActiveSection(visibleSections[0].target.id)
-  //       }
-  //     },
-  //     {
-  //       root: container,
-  //       threshold: [0.3, 0.5, 0.7],
-  //     },
-  //   )
-
-  //   sections.forEach((section) => observer.observe(section))
-
-  //   return () => observer.disconnect()
-  // }, [])
+  
 
   useEffect(() => {
     const container = containerRef.current
