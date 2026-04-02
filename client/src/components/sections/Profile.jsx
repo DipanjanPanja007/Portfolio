@@ -186,7 +186,7 @@ function Profile() {
     <section
       ref={sectionRef}
       id="profile"
-      className="relative scroll-mt-20 py-8 sm:py-10"
+      className="relative scroll-mt-30 py-12 sm:py-10"
     >
       <div
         className="pointer-events-none absolute left-0 right-0 top-0 h-px overflow-hidden bg-slate-800/80"

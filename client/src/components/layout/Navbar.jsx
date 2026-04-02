@@ -77,8 +77,8 @@ function Navbar({ activeSection = 'profile', onNavigate }) {
   return (
     <header className="sticky top-0 z-50 hidden border-b border-slate-800/80 bg-slate-950/70 backdrop-blur md:block">
       <nav className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
-        <span className="text-sm font-semibold tracking-wide text-slate-100">
-          Portfolio
+        <span className="text-lg font-semibold tracking-wide text-slate-100">
+          Dipanjan 
         </span>
         <ul className="flex items-center gap-1">
           {navItems.map((item) => (
