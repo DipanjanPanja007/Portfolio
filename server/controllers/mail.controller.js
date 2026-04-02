@@ -14,6 +14,7 @@ const sendMailController = async (req, res) => {
       });
     }
     
+    await sendMail({ email, message, subject });
 
     res.status(200).json({
       success: true,
