@@ -15,35 +15,77 @@ function App() {
   const containerRef = useRef(null)
   const [activeSection, setActiveSection] = useState('profile')
 
+  // useEffect(() => {
+  //   const container = containerRef.current
+  //   if (!container) return
+
+  //   const sections = sectionIds
+  //     .map((id) => document.getElementById(id))
+  //     .filter(Boolean)
+
+  //   if (sections.length === 0) return
+
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       const visibleSections = entries
+  //         .filter((entry) => entry.isIntersecting)
+  //         .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+
+  //       if (visibleSections.length > 0) {
+  //         setActiveSection(visibleSections[0].target.id)
+  //       }
+  //     },
+  //     {
+  //       root: container,
+  //       threshold: [0.3, 0.5, 0.7],
+  //     },
+  //   )
+
+  //   sections.forEach((section) => observer.observe(section))
+
+  //   return () => observer.disconnect()
+  // }, [])
+
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
-
+  
     const sections = sectionIds
       .map((id) => document.getElementById(id))
       .filter(Boolean)
-
+  
     if (sections.length === 0) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleSections = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-
-        if (visibleSections.length > 0) {
-          setActiveSection(visibleSections[0].target.id)
+  
+    const handleScroll = () => {
+      const containerRect = container.getBoundingClientRect()
+      const containerCenter = containerRect.top + containerRect.height / 2
+  
+      let closestSection = null
+      let minDistance = Infinity
+  
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect()
+        const sectionCenter = rect.top + rect.height / 2
+  
+        const distance = Math.abs(containerCenter - sectionCenter)
+  
+        if (distance < minDistance) {
+          minDistance = distance
+          closestSection = section
         }
-      },
-      {
-        root: container,
-        threshold: [0.3, 0.5, 0.7],
-      },
-    )
-
-    sections.forEach((section) => observer.observe(section))
-
-    return () => observer.disconnect()
+      })
+  
+      if (closestSection) {
+        setActiveSection((prev) =>
+          prev === closestSection.id ? prev : closestSection.id
+        )
+      }
+    }
+  
+    container.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll()
+  
+    return () => container.removeEventListener("scroll", handleScroll)
   }, [])
 
   const handleNavigate = (event, id) => {
