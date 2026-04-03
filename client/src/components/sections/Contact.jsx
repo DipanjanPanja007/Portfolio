@@ -161,11 +161,13 @@ function Contact() {
           )}
 
           {activeTab === "email" && (
-            <div className="flex items-center justify-between border border-slate-700 bg-black rounded-md px-4 py-3">
-              <span className="text-white">{yourEmail}</span>
+            <div className="flex items-center gap-2 border border-slate-700 bg-black rounded-md px-4 py-3">
+              <span className="text-white break-all flex-1">
+                {yourEmail}
+              </span>
               <button
                 onClick={() => copyToClipboard(yourEmail)}
-                className="text-blue-400 hover:text-white"
+                className="text-blue-400 hover:text-white shrink-0"
               >
                 Copy
               </button>
