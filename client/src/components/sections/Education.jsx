@@ -5,7 +5,7 @@ function Education() {
       institute: 'Academy of Technology',
       board: 'Maulana Abul Kalam Azad University of Technology, West Bengal',
       year: '2022 - 2026',
-      score: 'CGPA: 8.16 (till now)',
+      score: 'CGPA: 8.07',
       extra: '',
     },
     {

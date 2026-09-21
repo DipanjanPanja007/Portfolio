@@ -77,7 +77,7 @@ const secondaryLinks = [
   },
   {
     id: 'resume',
-    href: 'https://res.cloudinary.com/du4bs9xd2/image/upload/v1774985986/DipanjanResumeLatest_page-compressed_nvtbsk.jpg',
+    href: 'https://res.cloudinary.com/du4bs9xd2/image/upload/v1789986597/RESUME_UPLOAD_page-0001_zca3yl.jpg',
     label: 'Resume',
     icon: (
       <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
